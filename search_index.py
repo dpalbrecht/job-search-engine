@@ -55,7 +55,7 @@ def count():
 def post(payload):
     payload['url'] = payload['url'].strip('/')
     payload['created_at'] = datetime.utcnow().strftime('%Y-%m-%d')
-    if len(payload['poster']==0):
+    if len(payload['poster'])==0:
         payload['poster'] = 'Unknown'
     try:
         client.index(index=index_name, body=payload, id=payload['url'])
