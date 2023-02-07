@@ -7,8 +7,8 @@ from datetime import datetime
 
 
 
+# Title and post form
 st.markdown('<h1>Post a Job</h1><br>', unsafe_allow_html=True)
-
 _, col2, _ = st.columns([1,8,1])
 with col2:
     with st.form("job_form"):
@@ -21,6 +21,8 @@ with col2:
         }
         submitted = st.form_submit_button("Post")
 
+
+# Display success/failure
 if submitted:
     post_payload = True
     for name, value in payload.items():

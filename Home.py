@@ -2,12 +2,11 @@ import streamlit as st
 import search_index
 import css; css.set_page_style()
 from datetime import datetime
-import requests
 
 
 
+# Title and search bar
 st.markdown('<h1>Search Relevance & Matching Tech</h1><br>', unsafe_allow_html=True)
-
 col1, col2, _ = st.columns([1,2,1])
 with col1:
     st.markdown('<h3 style="text-align:end; padding:0px;">&#x1F50D;&#xFE0D;</h3>', unsafe_allow_html=True)
@@ -16,6 +15,8 @@ with col2:
                           placeholder=f"Search through {search_index.count():,} jobs...",
                           label_visibility='collapsed')
 
+
+# Show query results
 query_results = search_index.query(query)
 for result in query_results['hits']['hits']:
     days_ago_posted = (datetime.utcnow() - datetime.strptime(result['_source']['created_at'], '%Y-%m-%d')).days
