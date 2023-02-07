@@ -1,6 +1,7 @@
 # job-search-engine
-A job search engine and site created for the Relevance &amp; Matching Tech community on Slack (relevancy.slack.com).
-![alt text](https://github.com/dpalbrecht/job-search-engine/blob/main/homepage.png)
+A job search engine and site created for the Relevance &amp; Matching Tech community on Slack (relevancy.slack.com).  
+<br>
+![alt text](https://github.com/dpalbrecht/job-search-engine/blob/main/homepage.png)  
 <br><hr><br>
 
 Soon after I joined the group and started perusing open roles in the #jobs channel, I realized there was an opportunity to 1) build a quick search engine MVP and 2) contribute to the community. Below are the steps I took to deploy the site:
