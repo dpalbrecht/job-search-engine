@@ -25,7 +25,6 @@ with col2:
 
 # Display success/failure
 if submitted:
-    print(payload)
     post_payload = True
     for name, value in payload.items():
         if (name not in ['poster','EU']) and (value == ''):
