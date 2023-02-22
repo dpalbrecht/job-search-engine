@@ -14,12 +14,13 @@ with col2:
     query = st.text_input(label="Find jobs...",
                           placeholder=f"Search through {search_index.count():,} jobs...",
                           label_visibility='collapsed')
+    eu_flag = st.checkbox(label='EU')
     json_flag = st.checkbox(label='JSON Format')
 st.markdown('<hr>', unsafe_allow_html=True)
 
 
 # Show query results
-query_results = search_index.query(query)
+query_results = search_index.query(query, eu_flag)
 if json_flag:
     st.json(query_results['hits']['hits'])
 else:
