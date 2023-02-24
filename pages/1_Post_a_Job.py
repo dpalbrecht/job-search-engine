@@ -7,10 +7,20 @@ import css; css.set_page_style()
 from datetime import datetime
 from bs4 import BeautifulSoup
 import re
+from urllib.parse import urlparse
 import requests
+
+
+def raise_on_unsupported_job_site(url):
+    parsed = urlparse(url)
+    if parsed.hostname not in ['linkedin.com', 'www.linkedin.com']:
+        raise ValueError(f"Unsupported host - {parsed.hostname}")
+
 
 def crawl(url):
     # From https://colab.research.google.com/drive/1L_s0ey6T-aK65J2wHSZEhoBVW8vmJlkH?usp=sharing#scrollTo=a8yeMg5Tv9Nx
+    raise_on_unsupported_job_site(url)
+
     html = requests.get(url).content
     soup = BeautifulSoup(html)
     description = soup.find(
@@ -33,11 +43,14 @@ def crawl(url):
 
 def crawl_and_populate():
     url = st.session_state.crawl_url
-    crawled = crawl(url)
-    st.session_state.url = crawled['url']
-    st.session_state.title = crawled['title']
-    st.session_state.company = crawled['company']
-    st.session_state.description = crawled['description']
+    try:
+        crawled = crawl(url)
+        st.session_state.url = crawled['url']
+        st.session_state.title = crawled['title']
+        st.session_state.company = crawled['company']
+        st.session_state.description = crawled['description']
+    except ValueError:
+        st.warning(f"Only LinkedIn URLs currently supported... However you can still manually add your job below", icon='🚨')
 
 
 
