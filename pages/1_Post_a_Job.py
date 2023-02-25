@@ -18,7 +18,6 @@ def crawl(url):
     # Determine whether the host is supported (LinkedIn only at the moment)
     parsed = urlparse(url)
     if parsed.hostname not in ['linkedin.com', 'www.linkedin.com']:
-        st.warning(f"Only LinkedIn URLs currently supported... But you can still manually add your job below!", icon='🚨')
         return {}
 
     # Scrape the data
@@ -49,6 +48,8 @@ def crawl_and_populate():
             st.session_state.title = crawled_data['title']
             st.session_state.company = crawled_data['company']
             st.session_state.description = crawled_data['description']
+        else:
+            st.warning(f"Only LinkedIn URLs currently supported... But you can still manually add your job below!", icon='🚨')
     except:
         st.warning(f"Something went wrong... But you can still manually add your job below!", icon='🚨')
 
