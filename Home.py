@@ -24,10 +24,10 @@ query_results = search_index.query(query, eu_flag)
 if json_flag:
     st.json(query_results['hits']['hits'])
 else:
-    for result in query_results['hits']['hits']:
+    for n, result in enumerate(query_results['hits']['hits'], 1):
         days_ago_posted = (datetime.utcnow() - datetime.strptime(result['_source']['created_at'], '%Y-%m-%d')).days
         st.markdown(f"""
-        <h3>{result['_source']['company']}</h3>
+        <h3>{n}. {result['_source']['company']}</h3>
         <h5><a href={result['_source']['url']}>{result['_source']['title']}</a></h5>
         <div style="padding:0px 0px 16px;"><b>{result['_source']['poster']} posted {days_ago_posted} days ago</b></div>
         <div>{result['_source']['description'][:1000]+'...'}</div>

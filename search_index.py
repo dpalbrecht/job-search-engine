@@ -27,7 +27,7 @@ lambda_client = boto3.client(
 
 def query(user_query, eu_flag):
     query = {
-      'size': 10,
+      'size': 50,
       'query': {
         'bool': {
             'filter': {'term': {'eu': eu_flag}},
