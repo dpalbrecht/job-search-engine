@@ -24,6 +24,27 @@ lambda_client = boto3.client(
 )
 
 
+def random_query():
+    query = {
+       "size": 50,
+       "query": {
+          "function_score": {
+             "functions": [
+                {
+                   "random_score": {
+                      "seed": int(datetime.utcnow().timestamp())
+                   }
+                }
+             ]
+          }
+       }
+    }
+    response = client.search(
+        body = query,
+        index = index_name
+    )
+    return response
+
 
 def query(user_query, eu_flag):
     query = {

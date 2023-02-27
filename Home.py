@@ -2,6 +2,7 @@ import streamlit as st
 import search_index
 import css; css.set_page_style()
 from datetime import datetime
+from wordcloud import WordCloud, STOPWORDS
 
 
 
@@ -16,7 +17,20 @@ with col2:
                           label_visibility='collapsed')
     eu_flag = st.checkbox(label='EU')
     json_flag = st.checkbox(label='JSON Format')
+    if not query:
+        random_text = ''
+        for doc in search_index.random_query()['hits']['hits']:
+            random_text += doc['_source']['title'] + ' '
+        wordcloud = WordCloud(width=800, height=400,
+                              background_color="white",
+                              stopwords=STOPWORDS,
+                              mode='RGBA',
+                              colormap='plasma',
+                              collocations=False,
+                              min_word_length=2).generate(random_text)
+        st.image(wordcloud.to_image())
 st.markdown('<hr>', unsafe_allow_html=True)
+
 
 
 # Show query results

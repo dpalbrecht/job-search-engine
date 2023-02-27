@@ -2,3 +2,4 @@ streamlit
 boto3
 opensearch-py
 bs4
+wordcloud
