@@ -1,6 +1,6 @@
 from opensearchpy import OpenSearch, RequestsHttpConnection, AWSV4SignerAuth
 import boto3
-from datetime import datetime
+from datetime import datetime, timedelta
 import json
 
 
@@ -46,7 +46,11 @@ def random_query():
     return response
 
 
-def query(user_query, eu_flag):
+def query(user_query, eu_flag, most_recent_flag):
+    if most_recent_flag:
+        start_date = (datetime.utcnow().date() - timedelta(days=30)).strftime('%Y-%m-%d')
+    else:
+        start_date = '2023-01-01'
     query = {
       'size': 50,
       'query': {
@@ -68,6 +72,16 @@ def query(user_query, eu_flag):
                     "prefix_length": 0, # number of leading characters that are not considered in fuzziness
                     "auto_generate_synonyms_phrase_query": True, # enables synonym searches if you have them
                     "zero_terms_query": "none" # returns no results if query gets reduced to no terms (if all of them are stopwords)
+                }
+            },
+            {
+                "range": {
+                    "created_at": {
+                      "gte": start_date,
+                      "lte": datetime.utcnow().date().strftime('%Y-%m-%d'),
+                      "format": "yyyy-MM-dd",
+                      "relation" : "within"
+                    }
                 }
             }]
         }

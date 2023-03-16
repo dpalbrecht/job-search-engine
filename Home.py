@@ -7,7 +7,8 @@ from wordcloud import WordCloud, STOPWORDS
 
 
 # Title and search bar, and format options
-st.markdown('<h1>Search Relevance & Matching Tech</h1><br>', unsafe_allow_html=True)
+st.markdown('<h1>Search Relevance & Matching Tech</h1>', unsafe_allow_html=True)
+st.markdown("""<h4><a href="https://www.opensourceconnections.com/slack/">Join the Slack Channel</a></h4><br><br>""", unsafe_allow_html=True)
 col1, col2, _ = st.columns([1,2,1])
 with col1:
     st.markdown('<h3 style="text-align:end; padding:0px;">&#x1F50D;&#xFE0D;</h3>', unsafe_allow_html=True)
@@ -15,6 +16,7 @@ with col2:
     query = st.text_input(label="Find jobs...",
                           placeholder=f"Search through {search_index.count():,} jobs...",
                           label_visibility='collapsed')
+    most_recent_flag = st.checkbox(label='Last 30 Days', value=True)
     eu_flag = st.checkbox(label='EU')
     json_flag = st.checkbox(label='JSON Format')
     if not query:
@@ -34,7 +36,7 @@ st.markdown('<hr>', unsafe_allow_html=True)
 
 
 # Show query results
-query_results = search_index.query(query, eu_flag)
+query_results = search_index.query(query, eu_flag, most_recent_flag)
 if json_flag:
     st.json(query_results['hits']['hits'])
 else:

@@ -60,35 +60,39 @@ st.markdown('<h1>Post a Job</h1><br>', unsafe_allow_html=True)
 _, col2, _ = st.columns([1,8,1])
 with col2:
     with st.form("job_form"):
-        url = st.text_input(label='URL', placeholder='URL *', label_visibility='collapsed', key='url')
+        url = st.text_input(label='URL', placeholder='* URL', label_visibility='collapsed', key='url')
         _ = st.form_submit_button('Auto-Populate (Beta)', on_click=crawl_and_populate)
         payload = {
             'company': st.text_input(label='Company', key='company',
-                                     placeholder='Company *', label_visibility='collapsed'),
+                                     placeholder='* Company', label_visibility='collapsed'),
             'title': st.text_input(label='Job Title', key='title',
-                                   placeholder='Job Title *', label_visibility='collapsed'),
-            'description': st.text_area(label='Description', placeholder='Description *',
+                                   placeholder='* Job Title', label_visibility='collapsed'),
+            'description': st.text_area(label='Description', placeholder='* Description',
                                         label_visibility='collapsed', key='description'),
             'url': url,
             'poster': st.text_input(label='Your Name', placeholder='Your Name', label_visibility='collapsed'),
             'eu': st.checkbox(label='EU')
         }
+        password = st.text_input(label=' ', placeholder='* Password: What book is on the cover of the Search Relevance Slack channel?', label_visibility='collapsed')
         submitted = st.form_submit_button("Post")
 
 
 # Display success/failure
 if submitted:
-    post_payload = True
-    for name, value in payload.items():
-        if (name not in ['poster', 'EU']) and (value == ''):
-            post_payload = False
-            st.warning(f"The '{name}' parameter is required. Can't post job.", icon='🚨')
-    if post_payload:
-        if search_index.already_posted_job(payload['url']):
-            st.warning(f"This job has already been posted. {datetime.utcnow().strftime('%H-%M-%S')}", icon='⚠️')
-        else:
-            success = search_index.post(payload)
-            if success:
-                st.success(f"Success! {datetime.utcnow().strftime('%H-%M-%S')}", icon='✅')
+    if password.lower() == 'relevant search':
+        post_payload = True
+        for name, value in payload.items():
+            if (name not in ['poster', 'EU']) and (value == ''):
+                post_payload = False
+                st.warning(f"The '{name}' parameter is required. Can't post job.", icon='🚨')
+        if post_payload:
+            if search_index.already_posted_job(payload['url']):
+                st.warning(f"This job has already been posted. {datetime.utcnow().strftime('%H-%M-%S')}", icon='⚠️')
             else:
-                st.warning(f"Something went wrong! The job was not posted. {datetime.utcnow().strftime('%H-%M-%S')}", icon='🚨')
+                success = search_index.post(payload)
+                if success:
+                    st.success(f"Success! {datetime.utcnow().strftime('%H-%M-%S')}", icon='✅')
+                else:
+                    st.warning(f"Something went wrong! The job was not posted. {datetime.utcnow().strftime('%H-%M-%S')}", icon='🚨')
+    else:
+        st.warning(f"Incorrect password! {datetime.utcnow().strftime('%H-%M-%S')}", icon='🚨')
