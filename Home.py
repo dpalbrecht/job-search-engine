@@ -55,20 +55,20 @@ else:
             poster_msg = f"{result['_source']['poster']} posted {days_ago_posted} days ago"
         else:
             poster_msg = f"Posted {days_ago_posted} days ago"
-        st.markdown(f"<h3>{n}. {result['_source']['company']}</h3>", unsafe_allow_html=True)
-        st.button(result['_source']['title'],
-                  key=result['_source']['url'],
-                  on_click=click_job_url,
-                  kwargs={'url':result['_source']['url'],'query':query})
-        st.markdown(f"""
-        <div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>
-        <div>{result['_source']['description'][:1000]+'...'}</div>
-        <hr>
-        """, unsafe_allow_html=True)
+        # st.markdown(f"<h3>{n}. {result['_source']['company']}</h3>", unsafe_allow_html=True)
+        # st.button(result['_source']['title'],
+        #           key=result['_source']['url'],
+        #           on_click=click_job_url,
+        #           kwargs={'url':result['_source']['url'],'query':query})
         # st.markdown(f"""
-        # <h3>{n}. {result['_source']['company']}</h3>
-        # <h5><a href={result['_source']['url']}>{result['_source']['title']}</a></h5>
         # <div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>
         # <div>{result['_source']['description'][:1000]+'...'}</div>
         # <hr>
         # """, unsafe_allow_html=True)
+        st.markdown(f"""
+        <h3>{n}. {result['_source']['company']}</h3>
+        <h5><a href={result['_source']['url']}>{result['_source']['title']}</a></h5>
+        <div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>
+        <div>{result['_source']['description'][:1000]+'...'}</div>
+        <hr>
+        """, unsafe_allow_html=True)
