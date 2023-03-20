@@ -46,6 +46,45 @@ def random_query():
     return response
 
 
+def blank_query(user_query, eu_flag, most_recent_flag):
+    if most_recent_flag:
+        start_date = (datetime.utcnow().date() - timedelta(days=30)).strftime('%Y-%m-%d')
+    else:
+        start_date = '2023-01-01'
+    query = {
+        "query": {
+            "bool" : {
+                "must" : [
+                    {"match_all": {}},
+                    {
+                        "range": {
+                            "created_at": {
+                              "gte": start_date,
+                              "lte": datetime.utcnow().date().strftime('%Y-%m-%d'),
+                              "format": "yyyy-MM-dd",
+                              "relation": "within"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "size": 50,
+        "sort": [
+          {
+            "created_at": {
+              "order": "desc"
+            }
+          }
+        ]
+    }
+    response = client.search(
+        body = query,
+        index = index_name
+    )
+    return response
+
+
 def query(user_query, eu_flag, most_recent_flag):
     if most_recent_flag:
         start_date = (datetime.utcnow().date() - timedelta(days=30)).strftime('%Y-%m-%d')
@@ -80,7 +119,7 @@ def query(user_query, eu_flag, most_recent_flag):
                       "gte": start_date,
                       "lte": datetime.utcnow().date().strftime('%Y-%m-%d'),
                       "format": "yyyy-MM-dd",
-                      "relation" : "within"
+                      "relation": "within"
                     }
                 }
             }]

@@ -15,6 +15,12 @@ def set_page_style():
         h4 {
           text-align: center;
         }
+        div.stButton>button {
+            color: #4F8BF9;
+            backgroud-color: #00ff00;
+            text-decoration: underline;
+            border-width: 3;
+        }
     </style>
     """
     st.markdown(margins_css, unsafe_allow_html=True)

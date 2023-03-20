@@ -61,7 +61,7 @@ _, col2, _ = st.columns([1,8,1])
 with col2:
     with st.form("job_form"):
         url = st.text_input(label='URL', placeholder='* URL', label_visibility='collapsed', key='url')
-        _ = st.form_submit_button('Auto-Populate (Beta)', on_click=crawl_and_populate)
+        _ = st.form_submit_button('Auto-Populate (LinkedIn URL)', on_click=crawl_and_populate)
         payload = {
             'company': st.text_input(label='Company', key='company',
                                      placeholder='* Company', label_visibility='collapsed'),
