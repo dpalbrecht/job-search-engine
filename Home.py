@@ -3,13 +3,8 @@ import search_index
 import css; css.set_page_style()
 from datetime import datetime
 from wordcloud import WordCloud, STOPWORDS
-import webbrowser
-# import streamlit.components.v1 as components
+from streamlit.components.v1 import html
 
-
-
-def click_job_url(query, url):
-    webbrowser.open(url, new=2)
 
 
 # Title and search bar, and format options
@@ -37,8 +32,11 @@ with col2:
                               collocations=False,
                               min_word_length=2).generate(random_text)
         st.image(wordcloud.to_image())
-        # st.markdown("<a href='#search-relevance-matching-tech'>Link to top</a>", unsafe_allow_html=True)
 st.markdown('<hr>', unsafe_allow_html=True)
+
+
+def click_job_url(url):
+    html(f"""<script type="text/javascript">window.open('{url}', '_blank');</script>""")
 
 
 # Show query results
@@ -55,19 +53,12 @@ else:
             poster_msg = f"{result['_source']['poster']} posted {days_ago_posted} days ago"
         else:
             poster_msg = f"Posted {days_ago_posted} days ago"
-        # st.markdown(f"<h3>{n}. {result['_source']['company']}</h3>", unsafe_allow_html=True)
-        # st.button(result['_source']['title'],
-        #           key=result['_source']['url'],
-        #           on_click=click_job_url,
-        #           kwargs={'url':result['_source']['url'],'query':query})
-        # st.markdown(f"""
-        # <div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>
-        # <div>{result['_source']['description'][:1000]+'...'}</div>
-        # <hr>
-        # """, unsafe_allow_html=True)
+        st.markdown(f"<h3>{n}. {result['_source']['company']}</h3>", unsafe_allow_html=True)
+        st.button(result['_source']['title'],
+                  key=result['_source']['url'],
+                  on_click=click_job_url,
+                  kwargs={'url':result['_source']['url']})
         st.markdown(f"""
-        <h3>{n}. {result['_source']['company']}</h3>
-        <h5><a href={result['_source']['url']}>{result['_source']['title']}</a></h5>
         <div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>
         <div>{result['_source']['description'][:1000]+'...'}</div>
         <hr>
