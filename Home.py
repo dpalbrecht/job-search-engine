@@ -17,11 +17,12 @@ with col1:
     st.markdown('<h3 style="text-align:end; padding:0px;">&#x1F50D;&#xFE0D;</h3>', unsafe_allow_html=True)
 with col2:
     query = st.text_input(label="Find jobs...",
-                          placeholder=f"Search through {search_index.count():,} jobs...",
+                          placeholder="Search through jobs...",
                           label_visibility='collapsed')
     most_recent_flag = st.checkbox(label='Last 30 Days', value=True)
     eu_flag = st.checkbox(label='EU')
     json_flag = st.checkbox(label='JSON Format')
+    st.write(f"{search_index.count(most_recent_flag, eu_flag):,} jobs to be exact!")
 st.markdown('<hr>', unsafe_allow_html=True)
 
 
