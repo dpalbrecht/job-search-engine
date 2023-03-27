@@ -2,8 +2,10 @@ import streamlit as st
 import search_index
 import css; css.set_page_style()
 from datetime import datetime
-from wordcloud import WordCloud, STOPWORDS
 from streamlit.components.v1 import html
+import json
+import boto3
+s3 = boto3.resource('s3')
 
 
 
@@ -20,23 +22,16 @@ with col2:
     most_recent_flag = st.checkbox(label='Last 30 Days', value=True)
     eu_flag = st.checkbox(label='EU')
     json_flag = st.checkbox(label='JSON Format')
-    if not query:
-        random_text = ''
-        for doc in search_index.random_query()['hits']['hits']:
-            random_text += doc['_source']['title'] + ' '
-        wordcloud = WordCloud(width=800, height=400,
-                              background_color="white",
-                              stopwords=STOPWORDS,
-                              mode='RGBA',
-                              colormap='plasma',
-                              collocations=False,
-                              min_word_length=2).generate(random_text)
-        st.image(wordcloud.to_image())
 st.markdown('<hr>', unsafe_allow_html=True)
 
 
-def click_job_url(url):
-    html(f"""<script type="text/javascript">window.open('{url}', '_blank');</script>""")
+# Open new tab and write log to S3
+def click_job_url(url, query, rank):
+    html(f"""<script type="text/javascript">window.open('{url}', '_blank');</script>""", height=0)
+    s3object = s3.Object('job-clicks', f'{datetime.utcnow()}.json')
+    s3object.put(
+        Body=(bytes(json.dumps({'query':query, 'url':url, 'rank':rank}).encode('UTF-8')))
+    )
 
 
 # Show query results
@@ -57,7 +52,7 @@ else:
         st.button(result['_source']['title'],
                   key=result['_source']['url'],
                   on_click=click_job_url,
-                  kwargs={'url':result['_source']['url']})
+                  kwargs={'url':result['_source']['url'], 'query':query, 'rank':n})
         st.markdown(f"""
         <div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>
         <div>{result['_source']['description'][:1000]+'...'}</div>
