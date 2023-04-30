@@ -5,6 +5,7 @@ from datetime import datetime
 from streamlit.components.v1 import html
 import json
 import boto3
+import streamlit_analytics
 s3 = boto3.resource('s3')
 
 
@@ -51,23 +52,24 @@ else:
 if json_flag:
     st.json(query_results['hits']['hits'])
 else:
-    for n, result in enumerate(query_results['hits']['hits'], 1):
-        days_ago_posted = (datetime.utcnow() - datetime.strptime(result['_source']['created_at'], '%Y-%m-%d')).days
-        if result['_source']['poster'] != 'Unknown':
-            poster_msg = f"{result['_source']['poster']} posted {days_ago_posted} days ago"
-        else:
-            poster_msg = f"Posted {days_ago_posted} days ago"
-        st.markdown(f"<h3>{n}. {result['_source']['company']}</h3>", unsafe_allow_html=True)
-        st.button(result['_source']['title'],
-                  key=result['_source']['url'],
-                  on_click=click_job_url,
-                  kwargs={'url':result['_source']['url'], 'query':query, 'rank':n})
-        st.button('Find Similar Jobs',
-                  key=result['_source']['url']+'_FIND_SIMILAR_JOBS',
-                  on_click=update_session_query,
-                  kwargs={'new_query':result['_source']['title']})
-        st.markdown(f"""
-        <div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>
-        <div>{result['_source']['description'][:1000]+'...'}</div>
-        <hr>
-        """, unsafe_allow_html=True)
+    with streamlit_analytics.track():
+        for n, result in enumerate(query_results['hits']['hits'], 1):
+            days_ago_posted = (datetime.utcnow() - datetime.strptime(result['_source']['created_at'], '%Y-%m-%d')).days
+            if result['_source']['poster'] != 'Unknown':
+                poster_msg = f"{result['_source']['poster']} posted {days_ago_posted} days ago"
+            else:
+                poster_msg = f"Posted {days_ago_posted} days ago"
+            st.markdown(f"<h3>{n}. {result['_source']['company']}</h3>", unsafe_allow_html=True)
+            st.button(result['_source']['title'],
+                      key=result['_source']['url'],
+                      on_click=click_job_url,
+                      kwargs={'url':result['_source']['url'], 'query':query, 'rank':n})
+            st.button('Find Similar Jobs',
+                      key=result['_source']['url']+'_FIND_SIMILAR_JOBS',
+                      on_click=update_session_query,
+                      kwargs={'new_query':result['_source']['title']})
+            st.markdown(f"""
+            <div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>
+            <div>{result['_source']['description'][:1000]+'...'}</div>
+            <hr>
+            """, unsafe_allow_html=True)
