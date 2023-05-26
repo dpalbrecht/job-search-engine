@@ -25,7 +25,7 @@ def crawl(url):
     soup = BeautifulSoup(html)
     description = soup.find(
         name='div',
-        attrs={'class':"show-more-less-html__markup show-more-less-html__markup--clamp-after-5"}
+        attrs={'class':"show-more-less-html__markup show-more-less-html__markup--clamp-after-5 relative overflow-hidden"}
     )
     description = description.get_text('\n').strip()
     title = soup.find('h1').text
