@@ -2,4 +2,4 @@ streamlit
 boto3
 opensearch-py
 bs4
-wordcloud
+streamlit_analytics==0.4.1
