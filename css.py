@@ -2,8 +2,8 @@ import streamlit as st
 
 
 
-def set_page_style():
-    st.set_page_config(layout="wide")
+def set_page_style(page_title):
+    st.set_page_config(page_title=page_title, page_icon='relevant_search.jpg', layout='wide')
     margins_css = """
     <style>
         .main > div {

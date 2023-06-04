@@ -3,7 +3,7 @@ import sys
 import json
 sys.path.append('..')
 import search_index
-import css; css.set_page_style()
+import css; css.set_page_style('Next Search Job • Post')
 from datetime import datetime
 from bs4 import BeautifulSoup
 import re

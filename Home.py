@@ -1,6 +1,6 @@
 import streamlit as st
 import search_index
-import css; css.set_page_style()
+import css; css.set_page_style('Next Search Job • Find')
 from datetime import datetime
 from streamlit.components.v1 import html
 import json
