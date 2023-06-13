@@ -7,4 +7,8 @@ tag-push:
 	docker push 838424036277.dkr.ecr.us-west-1.amazonaws.com/job-search-engine:latest
 
 pull:
+	aws ecr get-login-password | docker login --username AWS --password-stdin 838424036277.dkr.ecr.us-west-1.amazonaws.com
 	docker pull 838424036277.dkr.ecr.us-west-1.amazonaws.com/job-search-engine:latest
+
+run-prod:
+	docker run -p 8501:8501 --env-file ./.env 838424036277.dkr.ecr.us-west-1.amazonaws.com/job-search-engine
