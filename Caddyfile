@@ -1,0 +1,6 @@
+{$HOSTNAME:localhost} {
+    reverse_proxy * {
+      to my-service:8501
+    }
+    encode gzip zstd
+}
