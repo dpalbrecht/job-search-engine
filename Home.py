@@ -5,8 +5,15 @@ from datetime import datetime
 from streamlit.components.v1 import html
 import json
 import boto3
-s3 = boto3.resource('s3')
+s3_resource = boto3.resource('s3')
 
+
+
+# Record page loads to S3
+if 'page_loaded' not in st.session_state:
+    st.session_state['page_loaded'] = True
+    s3_object = s3_resource.Object('page-loads', f'temp/{datetime.utcnow()}')
+    s3_object.put(Body=(b''))
 
 
 # Title and search bar, and format options
@@ -32,8 +39,8 @@ st.markdown('<hr>', unsafe_allow_html=True)
 # Open new tab and write log to S3
 def click_job_url(url, query, rank):
     html(f"""<script type="text/javascript">window.open('{url}', '_blank');</script>""", height=0)
-    s3object = s3.Object('job-clicks', f'{datetime.utcnow()}.json')
-    s3object.put(
+    s3_object = s3_resource.Object('job-clicks', f'{datetime.utcnow()}.json')
+    s3_object.put(
         Body=(bytes(json.dumps({'query':query, 'url':url, 'rank':rank}).encode('UTF-8')))
     )
 
