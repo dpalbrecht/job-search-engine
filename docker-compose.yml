@@ -1,21 +1,21 @@
 version: '3'
 services:
   
-  my-service:
-    build: .Dockerfile
+  job-search-engine:
+    image: 838424036277.dkr.ecr.us-west-1.amazonaws.com/job-search-engine
     ports:
-      - 8501:8501
+      - "8501:8501"
 
   caddy:
     image: caddy:2
     container_name: caddy
     restart: always
     depends_on:
-      - my-service
+      - job-search-engine
     ports:
-      - ${ACME_PORT:-80}:80  # for the certificate ACME challenge, overridable with env var to prevent possible port collisions on local development
-      - "443:443"            # HTTPS
-    volume:
+      - "${ACME_PORT:-80}:80"  # for the certificate ACME challenge, overridable with env var to prevent possible port collisions on local development
+      - "443:443"              # HTTPS
+    volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
     environment:
-      HOSTNAME: "${CADDY_HOSTNAME}"
+      HOSTNAME: "${CADDY_HOSTNAME:-nextsearchjob.com}"
