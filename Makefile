@@ -11,4 +11,4 @@ pull:
 	docker pull 838424036277.dkr.ecr.us-west-1.amazonaws.com/job-search-engine:latest
 
 run-prod:
-   docker-compose --env-file ./.env up
+	docker-compose --env-file ./.env up
