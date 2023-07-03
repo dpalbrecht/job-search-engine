@@ -3,6 +3,11 @@ services:
   
   job-search-engine:
     image: 838424036277.dkr.ecr.us-west-1.amazonaws.com/job-search-engine
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "1"
     ports:
       - "8501:8501"
     env_file:
