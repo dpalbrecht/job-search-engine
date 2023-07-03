@@ -66,13 +66,13 @@ else:
             poster_msg = f"Posted {days_ago_posted} days ago"
         st.markdown(f"<h3>{n}. {result['_source']['company']}</h3>", unsafe_allow_html=True)
         st.button(result['_source']['title'],
-                    key=result['_source']['url'],
-                    on_click=click_job_url,
-                    kwargs={'url':result['_source']['url'], 'query':query, 'rank':n})
+                  key=result['_source']['url'],
+                  on_click=click_job_url,
+                  kwargs={'url':result['_source']['url'], 'query':query, 'rank':n})
         st.button('Find Similar Jobs',
-                    key=result['_source']['url']+'_FIND_SIMILAR_JOBS',
-                    on_click=update_session_query,
-                    kwargs={'new_query':result['_source']['title']})
+                  key=result['_source']['url']+'_FIND_SIMILAR_JOBS',
+                  on_click=update_session_query,
+                  kwargs={'new_query':result['_source']['title']})
         st.markdown(f"""
         <div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>
         <div>{result['_source']['description'][:1000]+'...'}</div>
