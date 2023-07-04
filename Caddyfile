@@ -1,4 +1,5 @@
 {$HOSTNAME:localhost} {
+    tls internal
     reverse_proxy * {
       to job-search-engine:8501
     }
