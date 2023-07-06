@@ -22,9 +22,12 @@ def plot_date_range_activity(dates):
     dates = [dates[0] + datetime.timedelta(days=x) for x in range((dates[1]-dates[0]).days + 1)]
     for date in dates:
         date_str = date.strftime('%Y-%m-%d')
-        temp_data = json.loads(s3_resource.Object('page-loads', f'processed/{date_str}.json').get()['Body'].read())
+        try:
+            temp_data = json.loads(s3_resource.Object('page-loads', f'processed/{date_str}.json').get()['Body'].read())
+            y.append(sum(list(temp_data.values())))
+        except:
+            y.append(0)
         x.append(date_str)
-        y.append(sum(list(temp_data.values())))
     fig = go.Figure(data=go.Bar(x=x, y=y))
     fig.update_layout(title=f'Page Loads from {x[0]} to {x[-1]}', 
                       xaxis_title='Date', 
@@ -46,11 +49,15 @@ with container1:
 
 # Plot a single day's activity
 def plot_date_activity(date):
-    data = json.loads(s3_resource.Object('page-loads', f'processed/{date}.json').get()['Body'].read())
-    x, y = [], []
-    for hour, activity in sorted([(int(k),int(v)) for k,v in data.items()], key=lambda x: x[0]):
-        x.append(hour)
-        y.append(activity)
+    try:
+        data = json.loads(s3_resource.Object('page-loads', f'processed/{date}.json').get()['Body'].read())
+        x, y = [], []
+        for hour, activity in sorted([(int(k),int(v)) for k,v in data.items()], key=lambda x: x[0]):
+            x.append(hour)
+            y.append(activity)
+    except:
+        x = list(range(24))
+        y = [0]*24
     fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers', 
                                     line=dict(dash='dot'), marker=dict(size=10)))
     fig.update_layout(title=f'Page Loads on {date}', 
