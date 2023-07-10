@@ -5,6 +5,7 @@ from datetime import datetime
 from streamlit.components.v1 import html
 import json
 import boto3
+import google_analytics; google_analytics.inject_google_analytics()
 s3_resource = boto3.resource('s3')
 
 
