@@ -37,15 +37,6 @@ with col2:
 st.markdown('<hr>', unsafe_allow_html=True)
 
 
-# # Open new tab and write log to S3
-# def click_job_url(url, query, rank):
-#     html(f"""<script type="text/javascript">window.open('{url}', '_blank');</script>""", height=0)
-#     s3_object = s3_resource.Object('job-clicks', f'{datetime.utcnow()}.json')
-#     s3_object.put(
-#         Body=(bytes(json.dumps({'query':query, 'url':url, 'rank':rank}).encode('UTF-8')))
-#     )
-
-
 # Update session query from Find Similar Jobs
 def update_session_query(new_query):
     st.session_state.query = new_query
@@ -65,11 +56,6 @@ else:
             poster_msg = f"{result['_source']['poster']} posted {days_ago_posted} days ago"
         else:
             poster_msg = f"Posted {days_ago_posted} days ago"
-        # st.markdown(f"<h3>{n}. {result['_source']['company']}</h3>", unsafe_allow_html=True)
-        # st.button(result['_source']['title'],
-        #           key=result['_source']['url'],
-        #           on_click=click_job_url,
-        #           kwargs={'url':result['_source']['url'], 'query':query, 'rank':n})
         st.write(f"""<div class="job-link">{n}. """+
                  f"""<a href="{result['_source']['url']}" target="_blank" onclick="gtag('event', 'click', """
                  +"""{'event_category' : 'outbound', 'event_label' : """
