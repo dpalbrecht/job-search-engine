@@ -21,6 +21,9 @@ def set_page_style(page_title):
             text-decoration: underline;
             border-width: 3;
         }
+        div.job-link {
+          font-size: 28px;
+        }
     </style>
     """
     st.markdown(margins_css, unsafe_allow_html=True)
