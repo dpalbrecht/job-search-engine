@@ -96,7 +96,7 @@ def get_job_listings(query, search_param_start):
     }
     search = GoogleSearch(search_params)
     results = search.get_dict()
-    return results['jobs_results']
+    return results.get('jobs_results', [])
 
 
 def merge_job_description(job):
@@ -179,7 +179,11 @@ if st.session_state.get('password') or (input_password == os.environ['STREAMLIT_
 
         while len(st.session_state['current_query']['jobs_to_display']) < 10:
 
-            for n, job in enumerate(get_job_listings(query, st.session_state['current_query']['search_param_start']), 1):
+            job_listings = get_job_listings(query, st.session_state['current_query']['search_param_start'])
+            if len(job_listings) == 0:
+                break
+
+            for n, job in enumerate(job_listings, 1):
 
                 if job['job_id'] not in st.session_state['current_query']['job_ids_to_display']:
                     job['job_url'] = get_job_link(job['job_id'])
