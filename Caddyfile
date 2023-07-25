@@ -1,6 +1,0 @@
-{$HOSTNAME:localhost} {
-    reverse_proxy * {
-      to job-search-engine:8501
-    }
-    encode gzip zstd
-}

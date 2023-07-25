@@ -12,17 +12,3 @@ services:
       - "8501:8501"
     env_file:
       - ./.env
-
-  caddy:
-    image: caddy:2
-    container_name: caddy
-    restart: always
-    depends_on:
-      - job-search-engine
-    ports:
-      - "${ACME_PORT:-80}:80"  # for the certificate ACME challenge, overridable with env var to prevent possible port collisions on local development
-      - "443:443"              # HTTPS
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-    environment:
-      HOSTNAME: "${CADDY_HOSTNAME:-nextsearchjob.com}"
