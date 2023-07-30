@@ -66,6 +66,15 @@ def parse_page_events(response):
     return data
 
 
+def parse_link_clicks(response):
+    data = defaultdict(lambda: 0)
+    for row in response:
+        link_name = row.dimension_values[0]
+        click_count = row.metric_values[0]
+        data[link_name.value] += int(click_count.value)
+    return data
+
+
 def query_google_analytics(report_type, start_date, end_date):
     if report_type == 'page_events':
         query = RunReportRequest(
@@ -81,3 +90,11 @@ def query_google_analytics(report_type, start_date, end_date):
             )
         )
         return parse_page_events(get_data(query))
+    elif report_type == 'link_clicks':
+        query = RunReportRequest(
+            property=f"properties/{os.environ['GA4_PROPERTY_ID']}",
+            dimensions=[Dimension(name="customEvent:link_url")],
+            metrics=[Metric(name="eventCount")],
+            date_ranges=[DateRange(start_date=start_date, end_date=end_date)]
+        )
+        return parse_link_clicks(get_data(query))
