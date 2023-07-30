@@ -95,11 +95,22 @@ def merge_job_description(job):
     return job
 
 
+def display_similar_jobs(job):
+    query = f"{job['title']} @ {job['company_name']}"
+    query_results = search_index.query(query, eu_flag=False, most_recent_flag=True, num_results=3)
+    spaces = ''.join(['&nbsp;']*10)
+    st.write('Similar jobs we added in the last 30 days:')
+    for n, result in enumerate(query_results['hits']['hits'], 1):
+        st.markdown(f"""{spaces}{n}) <a href="{result['_source']['url']}" target="_blank">{result['_source']['title']} @ {result['_source']['company']}</a>""", 
+                    unsafe_allow_html=True)
+
+
 def display_this_job(n, job, query):
     st.markdown(f"""
         <h3>{n}. 
             <a href="{job['job_url']}" target="_blank">{job['title']} @ {job['company_name']}</a>
         </h3>""", unsafe_allow_html=True)
+    display_similar_jobs(job)
     st.button("Add to Site", 
               key=job['job_id'],
               on_click=add_job_to_site,
@@ -112,7 +123,6 @@ def display_this_job(n, job, query):
               key=job['job_id']+"-2",
               on_click=remove_job_listing,
               kwargs={'job_data':job, 'query':query})
-    st.markdown("<hr>", unsafe_allow_html=True)
 
 
 def add_new_session_state(query):
@@ -198,6 +208,7 @@ if st.session_state.get('password') or (input_password == os.environ['STREAMLIT_
         # Display jobs
         for n, job in enumerate(st.session_state['current_query']['jobs_to_display'], 1):
             display_this_job(n, job, query)
+            st.markdown("<hr>", unsafe_allow_html=True)            
         progress_bar.empty()
 else:
     if input_password != '':
