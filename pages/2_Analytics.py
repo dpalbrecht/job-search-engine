@@ -1,77 +1,42 @@
 import streamlit as st
 import sys
 sys.path.append('..')
-import json
-import boto3
 import css; css.set_page_style('Next Search Job • Analytics')
 import plotly.graph_objs as go
 import datetime
-s3_resource = boto3.resource('s3')
+from google_analytics import query_google_analytics
+from dotenv import load_dotenv; load_dotenv()
 
 
 
-YESTERDAY = datetime.datetime.utcnow().date() - datetime.timedelta(days=1)
-MIN_DATE = datetime.date(2023,6,20)
 st.markdown('<h1>Site Analytics</h1>', unsafe_allow_html=True)
 st.markdown('<hr><br>', unsafe_allow_html=True)
 
 
-# Plot a date range's activity
-def plot_date_range_activity(dates):
+
+def plot_histogram(data, event_type):
     x, y = [], []
-    dates = [dates[0] + datetime.timedelta(days=x) for x in range((dates[1]-dates[0]).days + 1)]
-    for date in dates:
-        date_str = date.strftime('%Y-%m-%d')
-        try:
-            temp_data = json.loads(s3_resource.Object('page-loads', f'processed/{date_str}.json').get()['Body'].read())
-            y.append(sum(list(temp_data.values())))
-        except:
-            y.append(0)
-        x.append(date_str)
+    for key, value in data[event_type].items():
+        x.append(key)
+        y.append(value)
     fig = go.Figure(data=go.Bar(x=x, y=y))
-    fig.update_layout(title=f'Page Loads from {x[0]} to {x[-1]}', 
-                      xaxis_title='Date', 
-                      yaxis_title='Load Count')
-    fig.update_xaxes(dtick="D1", tickformat="%Y-%m-%d")
+    fig.update_layout(title=f"{event_type.replace('_',' ').title()} Events", 
+                      xaxis_title='Page', 
+                      yaxis_title='Count')
     st.plotly_chart(fig)
 
 
+
+# Plot a date range's activity
 container1 = st.container()
 with container1:
     cols1 = st.columns(5)
     with cols1[0]:
-        dates = st.date_input(label='Choose a Date Range Display (UTC):', 
-                              value=(max(YESTERDAY-datetime.timedelta(days=7), MIN_DATE), YESTERDAY),
-                              min_value=MIN_DATE, 
-                              max_value=YESTERDAY)
-    plot_date_range_activity(dates)
-
-
-# Plot a single day's activity
-def plot_date_activity(date):
-    try:
-        data = json.loads(s3_resource.Object('page-loads', f'processed/{date}.json').get()['Body'].read())
-        x, y = [], []
-        for hour, activity in sorted([(int(k),int(v)) for k,v in data.items()], key=lambda x: x[0]):
-            x.append(hour)
-            y.append(activity)
-    except:
-        x = list(range(24))
-        y = [0]*24
-    fig = go.Figure(data=go.Scatter(x=x, y=y, mode='lines+markers', 
-                                    line=dict(dash='dot'), marker=dict(size=10)))
-    fig.update_layout(title=f'Page Loads on {date}', 
-                      xaxis_title='Hour of the Day', 
-                      yaxis_title='Load Count')
-    st.plotly_chart(fig)
-
-
-container2 = st.container()
-with container2:
-    cols2 = st.columns(5)
-    with cols2[0]:
-        date = st.date_input(label='Choose a Date to Display (UTC):', 
-                             value=YESTERDAY,
-                             min_value=MIN_DATE, 
-                             max_value=YESTERDAY)
-    plot_date_activity(date)
+        dates = st.date_input(label='Choose a Date Range Display:', 
+                              value=(datetime.datetime.utcnow().date()-datetime.timedelta(days=7), 
+                                     datetime.datetime.utcnow().date()))
+    start_date = dates[0].strftime('%Y-%m-%d')
+    end_date = dates[1].strftime('%Y-%m-%d')
+    page_event_dict = query_google_analytics('page_events', start_date, end_date)
+    plot_histogram(page_event_dict, event_type='click')
+    plot_histogram(page_event_dict, event_type='page_view')
