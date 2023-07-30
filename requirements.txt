@@ -7,3 +7,5 @@ awscli==1.27.142
 plotly
 google-search-results
 python-dotenv
+google-auth
+google-analytics-data
