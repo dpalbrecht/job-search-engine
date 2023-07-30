@@ -3,18 +3,8 @@ import search_index
 import css; css.set_page_style('Next Search Job • Find')
 from datetime import datetime
 from streamlit.components.v1 import html
-import json
-import boto3
 import google_analytics; google_analytics.inject_google_analytics()
-s3_resource = boto3.resource('s3')
 
-
-
-# Record page loads to S3
-if 'page_loaded' not in st.session_state:
-    st.session_state['page_loaded'] = True
-    s3_object = s3_resource.Object('page-loads', f'temp/{datetime.utcnow()}')
-    s3_object.put(Body=(b''))
 
 
 # Title and search bar, and format options
