@@ -18,6 +18,7 @@ Soon after I joined the group and started perusing open roles in the #jobs chann
 ## Notable Updates
 * [4/23] Get a real domain name by using Amazon Route 53 and PairDomains.com
 * [4/23] Enable user to search for "more jobs like this" with a single button click
-* [5/23] Track user behavior <s>with Streamlit Analytics</s> by writing page load and click events to S3, and a nightly cron for aggregating them. Add a page to visualize activity
+* [5/23] Track user behavior <s>with Streamlit Analytics</s> <s>by writing page load and click events to S3, and a nightly cron for aggregating them</s> with Google Analytics (7/29). Add a page to visualize activity
 * [5/23] Align dev and prod environments by using Docker
 * [6/23] Add new page, Scrape Jobs, so developers can more easily pull in jobs to the site
+* [7/19] Enable HTTPS
