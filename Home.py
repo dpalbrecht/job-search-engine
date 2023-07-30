@@ -53,7 +53,7 @@ else:
             poster_msg = f"{result['_source']['poster']} posted {days_ago_posted} days ago"
         else:
             poster_msg = f"Posted {days_ago_posted} days ago"
-        col1, col2 = st.columns([0.95,0.05])
+        col1, col2 = st.columns([0.9,0.1])
         with col1:
             st.write(f"""<div class="job-link">{n}. """+
                     f"""<a href="{result['_source']['url']}" target="_blank" onclick="gtag('event', 'click', """
@@ -62,7 +62,7 @@ else:
                     +f"""{result['_source']['title']} @ {result['_source']['company']}</a>"""
                     +"</div><br>", unsafe_allow_html=True)
         with col2:
-            st.button(f"{link_click_dict.get(result['_source']['url'], 0)}",
+            st.button(f"{link_click_dict.get(result['_source']['url'], 0)} Clicks",
                     key=result['_source']['url']+'_LINK_CLICKS',
                     help='Number of times this link has been clicked in the last 14 days.',
                     disabled=True)
