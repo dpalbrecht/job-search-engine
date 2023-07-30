@@ -13,21 +13,6 @@ s3_client = boto3.client('s3')
 
 
 
-# TODO: 
-    # Try better queries and filter for well known job boards. Inspect job links to ensure data quality
-        # data scientist recommender systems
-            # Doesn't look up to date based on Levi's website: https://www.karkidi.com/job-details/28957-senior-data-scientist-recommendation-systems-job?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
-        # search engineer
-            # Posted a year ago? https://www.jobzmall.com/allstate/job/enterprise-search-engineer?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
-        # but I also don't want to remove jobs that could be good
-            # maybe just start a list of domains I don't want to show, like karkidi and jobzmall
-        # Add functionality for a general google search
-            # site:lever.co | site:greenhouse.io | site:jobs.ashbyhq.com | site:app.dover.io | site:linkedin.com | site:stackoverflow.com (engineer | developer) "search" 
-            # Might need to parse each site though
-        # Merge several queries?
-
-
-
 def remove_job_from_session_state(job_data):
     st.session_state['current_query']['jobs_to_display'] = [job for job in st.session_state['current_query']['jobs_to_display'] 
                                                             if job['job_id'] != job_data['job_id']]
@@ -143,7 +128,7 @@ def add_new_session_state(query):
 # Password check
 placeholder = st.empty()
 input_password = placeholder.text_input(label="This page is locked. What's the password?",
-                                        value='').lower()
+                                        value='', type='password').lower()
 
 if st.session_state.get('password') or (input_password == os.environ['STREAMLIT_PW']):
     st.session_state['password'] = True
