@@ -64,13 +64,13 @@ def blank_query(user_query, eu_flag, most_recent_flag):
     return response
 
 
-def query(user_query, eu_flag, most_recent_flag):
+def query(user_query, eu_flag, most_recent_flag, num_results=50):
     if most_recent_flag:
         start_date = (datetime.utcnow().date() - timedelta(days=30)).strftime('%Y-%m-%d')
     else:
         start_date = '2023-01-01'
     query = {
-      'size': 50,
+      'size': num_results,
       'query': {
         'bool': {
             'filter': {'term': {'eu': eu_flag}},
