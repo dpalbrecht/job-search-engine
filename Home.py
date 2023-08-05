@@ -49,10 +49,7 @@ if json_flag:
 else:
     for n, result in enumerate(query_results['hits']['hits'], 1):
         days_ago_posted = (datetime.utcnow() - datetime.strptime(result['_source']['created_at'], '%Y-%m-%d')).days
-        if result['_source']['poster'] != 'Unknown':
-            poster_msg = f"{result['_source']['poster']} posted {days_ago_posted} days ago"
-        else:
-            poster_msg = f"Posted {days_ago_posted} days ago"
+
         col1, col2 = st.columns([0.9,0.1])
         with col1:
             st.write(f"""<div class="job-link">{n}. """+
@@ -66,12 +63,22 @@ else:
                     key=result['_source']['url']+'_LINK_CLICKS',
                     help='Number of times this link has been clicked in the last 14 days.',
                     disabled=True)
+
         st.button('Find Similar Jobs',
                 key=result['_source']['url']+'_FIND_SIMILAR_JOBS',
                 on_click=update_session_query,
                 kwargs={'new_query':result['_source']['title']})
+
+        description_text = ""
+        if result['_source']['poster'] != 'Unknown':
+            poster_msg = f"{result['_source']['poster']} posted {days_ago_posted} days ago"
+        else:
+            poster_msg = f"Posted {days_ago_posted} days ago"
+        description_text += f"""<div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>"""
+        if result['_source'].get('email', '') != '':
+            description_text += f"""<div style="padding:0px 0px 16px;"><b>Email the poster at: {result['_source']['email']}</b></div>"""
         st.markdown(f"""
-        <div style="padding:0px 0px 16px;"><b>{poster_msg}</b></div>
+        {description_text}
         <div>{result['_source']['description'][:1000]+'...'}</div>
         <hr>
         """, unsafe_allow_html=True)
