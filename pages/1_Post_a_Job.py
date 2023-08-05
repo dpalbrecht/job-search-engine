@@ -61,7 +61,7 @@ _, col2, _ = st.columns([1,8,1])
 with col2:
     with st.form("job_form"):
         url = st.text_input(label='URL', placeholder='* URL', label_visibility='collapsed', key='url')
-        _ = st.form_submit_button('Auto-Populate (LinkedIn URL)', on_click=crawl_and_populate)
+        _ = st.form_submit_button('Auto-Populate (LinkedIn URL Only)', on_click=crawl_and_populate)
         payload = {
             'company': st.text_input(label='Company', key='company',
                                      placeholder='* Company', label_visibility='collapsed'),
@@ -71,6 +71,9 @@ with col2:
                                         label_visibility='collapsed', key='description'),
             'url': url,
             'poster': st.text_input(label='Your Name', placeholder='Your Name', label_visibility='collapsed'),
+            'email': st.text_input(label='Your Email', placeholder='Your Email', label_visibility='collapsed'),
+            'slack_blurb': st.text_area(label='Slack Blurb', placeholder="Anything else that you'd like posted to Slack. Say something like 'This job is really great, reach out to me!'",
+                                        label_visibility='collapsed', key='slack_blurb'),
             'eu': st.checkbox(label='EU')
         }
         password = st.text_input(label=' ', placeholder='* Password: What book is on the cover of the Search Relevance Slack channel?', label_visibility='collapsed')
@@ -82,7 +85,7 @@ if submitted:
     if password.lower() == 'relevant search':
         post_payload = True
         for name, value in payload.items():
-            if (name not in ['poster', 'EU']) and (value == ''):
+            if (name not in ['poster', 'EU', 'slack_blurb', 'email']) and (value == ''):
                 post_payload = False
                 st.warning(f"The '{name}' parameter is required. Can't post job.", icon='🚨')
         if post_payload:
