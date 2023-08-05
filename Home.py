@@ -59,7 +59,7 @@ else:
                     +f"""{result['_source']['title']} @ {result['_source']['company']}</a>"""
                     +"</div><br>", unsafe_allow_html=True)
         with col2:
-            st.button(f"{link_click_dict.get(result['_source']['url'], 0)} Clicks",
+            st.button(f"{link_click_dict.get(result['_source']['url'][:100], 0)} Clicks",
                     key=result['_source']['url']+'_LINK_CLICKS',
                     help='Number of times this link has been clicked in the last 14 days.',
                     disabled=True)
