@@ -32,6 +32,8 @@ def add_job_to_site(query, job_data):
         'description': job_data['merged_description'],
         'url': job_data['job_url'],
         'poster': '',
+        'email': '',
+        'slack_blurb': '',
         'eu': False
     }
     success = search_index.post(payload)
